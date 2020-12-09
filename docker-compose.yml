@@ -1,0 +1,35 @@
+﻿version: '3.4'
+
+services:
+  database:
+    image: postgres:10.11
+    restart: always
+    environment:
+      POSTGRES_DB: "aviatm"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Qwerty123"
+    ports:
+      - "5433:5432"
+    
+
+  web-api:
+    build:
+      context: AviaTM
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '7000:80'
+
+  ui:
+    restart: always
+    build:
+      context: ui-aviatm
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      HOST: 0.0.0.0
+    volumes:
+      - "app/node_modules"
+    depends_on:
+      - web-api
